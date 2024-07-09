@@ -4,5 +4,6 @@
     "cam_password": "camuser",
     "duration": "00:30:00",
     "filetype": "mkv",
-    "bitrate": "64k"
+    "bitrate": "64k",
+    "record_directory": "./"
 }
