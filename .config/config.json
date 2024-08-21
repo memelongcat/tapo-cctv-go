@@ -2,6 +2,7 @@
     "cam_ip": "192.168.50.11",
     "cam_user": "camuser",
     "cam_password": "camuser",
+    "cam_stream": "stream2",
     "duration": "00:30:00",
     "filetype": "mkv",
     "bitrate": "64k",

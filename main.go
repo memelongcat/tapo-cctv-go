@@ -1,9 +1,9 @@
-// TODO: Сделать логгирование ошибок вместо отправки в _
 package main //Название пакета
 
 import ( //Импорт библиотек и модулей
 	"encoding/json" //Работа с JSON
 	"fmt"           // //Ввод-вывод
+	"log"           //Логгирование ошибок
 	"os"            //Работа с ФС
 	"time"          //Время
 
@@ -11,7 +11,7 @@ import ( //Импорт библиотек и модулей
 )
 
 func current_time() string { //получаем текущее время
-	return time.Now().Format("15:04:05") //возвращаем время в формате HH:MM:SS
+	return time.Now().Format("15.04.05") //возвращаем время в формате HH.MM.SS
 }
 
 func current_date() string { //получаем текущую дату
@@ -22,24 +22,33 @@ func file_directory(record_directory string, date string) string { //получ�
 	directory := record_directory + date //директория для записей + текущая дата
 	_, err := os.Stat(directory)         //кидаем в _ информацию о директории
 	if os.IsNotExist(err) {              //если нет директории, создаем
-		os.Mkdir(directory, 0777) //создаем директорию с уровнем доступа 0777
+		os.Mkdir(directory, 0755) //создаем директорию с уровнем доступа 0755
 	}
 	return directory
 }
 
 func get_ffmpeg_config(config_directory string) Config { //получаем JSON-файл с параметрами записи
-	config_file, _ := os.ReadFile(config_directory) //читаем JSON файл
-	var config Config                               //объявляем переменную config типа Config
-	json.Unmarshal(config_file, &config)            //анмаршалим JSON в структуру Config (TODO: прикутить обработчик ошибок)
+	config_file, err := os.ReadFile(config_directory) //читаем JSON файл
+	if err != nil {                                   //Логгируем ошибку при чтении файла и выходим из программы, если ошибка не nil
+		log.Fatal(err)
+	}
+	var config Config                          //объявляем переменную config типа Config
+	err = json.Unmarshal(config_file, &config) //анмаршалим JSON в структуру Config (TODO: прикутить обработчик ошибок)
+	if err != nil {                            //Логгируем ошибку при анмаршалинге JSON и выходим из программы, если ошибка не nil
+		log.Fatal(err)
+	}
 	return config
 }
 
 func cam_record(config Config, file_directory string, file_name string) {
 
-	input := fmt.Sprintf("rtsp://%s:%s@%s/stream2", config.Cam_user, config.Cam_password, config.Cam_ip) //составляем параметр для input
-	output := fmt.Sprintf("%s/%s.%s", file_directory, file_name, config.Filetype)                        //составляем параметр для output
+	input := fmt.Sprintf("rtsp://%s:%s@%s/%s", config.Cam_user, config.Cam_password, config.Cam_ip, config.Cam_stream) //составляем параметр для input
+	output := fmt.Sprintf("%s/%s.%s", file_directory, file_name, config.Filetype)                                      //составляем параметр для output
 
-	ffmpeg_go.Input(input, ffmpeg_go.KwArgs{"t": config.Duration}).Output(output, ffmpeg_go.KwArgs{"vcodec": "copy", "b:v": config.Bitrate}).Run() //запускаем ffmpeg
+	err := ffmpeg_go.Input(input, ffmpeg_go.KwArgs{"t": config.Duration}).Output(output, ffmpeg_go.KwArgs{"vcodec": "copy", "b:v": config.Bitrate}).Run() //запускаем ffmpeg
+	if err != nil {                                                                                                                                       //Логгируем ошибку при запуске ffmpeg и выходим из программы, если ошибка не nil
+		log.Fatal(err)
+	}
 
 }
 
@@ -47,6 +56,7 @@ type Config struct { //структура JSON, аналогичная стру�
 	Cam_ip           string `json:"cam_ip"`
 	Cam_user         string `json:"cam_user"`
 	Cam_password     string `json:"cam_password"`
+	Cam_stream       string `json:"cam_stream"`
 	Duration         string `json:"duration"`
 	Filetype         string `json:"filetype"`
 	Bitrate          string `json:"bitrate"`
@@ -54,11 +64,6 @@ type Config struct { //структура JSON, аналогичная стру�
 }
 
 func main() { //главная функция
-
-	//config := get_ffmpeg_config(".config/config.json")
-	//fmt.Printf("%s", config)
-
-	//ffmpeg_go.Input("1.jpg").Output("1.png").Run()
 
 	for {
 		cfg := get_ffmpeg_config(".config/config.json")
