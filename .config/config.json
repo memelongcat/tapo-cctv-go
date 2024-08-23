@@ -6,5 +6,5 @@
     "duration": "00:30:00",
     "filetype": "mkv",
     "bitrate": "64k",
-    "record_directory": "./"
+    "record_directory": "./records/"
 }
