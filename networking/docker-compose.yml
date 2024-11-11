@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  hostapd:
+    image: jsiu/hostapd
+    restart: always
+    network_mode: "host"
+    priveleged: true
+    volumes:
+      -./hostapd.conf:/etc/hostapd/hostapd.conf
+  dnsmasq:
+    image: strm/dnsmasq
+    restart: always
+    network_mode: "host"
+    priveleged: true
+    volumes:
+      -./dnsmasq.conf:/etc/dnsmasq/dnsmasq.conf
+    command: ["-d"]

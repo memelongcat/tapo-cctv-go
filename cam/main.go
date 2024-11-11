@@ -66,7 +66,7 @@ type Config struct { //структура JSON, аналогичная стру�
 func main() { //главная функция
 
 	for {
-		cfg := get_ffmpeg_config(".config/config.json")
+		cfg := get_ffmpeg_config("./config.json")
 		dir := file_directory(cfg.Record_directory, current_date())
 		file := current_time()
 
