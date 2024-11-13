@@ -33,7 +33,7 @@
 #		};
 		firewall = {
 			enable = true;
-			allowedTCPPorts = [ 53 80 443 ];
+			allowedTCPPorts = [ 53 80 139 443 445 ];
 			allowedUDPPorts = [ 53 67 68 ];
 			allowPing = true;
 
