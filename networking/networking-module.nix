@@ -48,4 +48,12 @@
 		};
 		networkmanager.unmanaged = [ "wlo1" ];
 	};
+	security.wrappers = {
+		rootlesskit = {
+		owner = "root";
+		group = "root";
+		capabilities = "cap_net_bind_service+ep";
+		source = "${pkgs.rootlesskit}/bin/rootlesskit";
+		};
+	};
 }
