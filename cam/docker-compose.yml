@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  cctv:
+    build: ./main
+    restart: always
+    volumes:
+      - ./config.json:/app/config.json
+      - /srv/samba/share:/app/records
+  samba:
+    image: dperson/samba
+    restart: always
+    ports:
+      - "139:139"
+      - "445:445"
+    volumes:
+      - /srv/samba/share:/share
+    command: [
+      "-u", "username;password",
+      "-s", "Public Share;/share;yes;no;no;all;none"
+    ]
