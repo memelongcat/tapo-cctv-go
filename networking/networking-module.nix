@@ -60,6 +60,6 @@
     	libcap
   	];
 	system.activationScripts.setDockerCap = ''
-    	setcap cap_net_bind_service=+ep ${pkgs.docker}/bin/dockerd
+    	${pkgs.libcap}/bin/setcap cap_net_bind_service=+ep ${pkgs.docker}/bin/dockerd
   	'';
 }
