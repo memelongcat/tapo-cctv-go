@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  hostapd:
+    image: jsiu/hostapd:2.11-r0
+    network_mode: "host"
+    restart: always
+    environment:
+      - INTERFACE=wlo1
+    volumes:
+      - .networking/hostapd.conf:/hostapd.conf
+    cap_add:
+      - NET_ADMIN
+  dnsmasq:
+    image: strm/dnsmasq
+    restart: always
+    network_mode: "host"
+    volumes:
+      - .networking/dnsmasq.conf:/etc/dnsmasq.conf
+    ports: 
+      - "53:53/udp"
+      - "53:53/tcp"
+    cap_add:
+      - NET_ADMIN
+    command: ["-d"]
+  samba:
+    image: dperson/samba
+    restart: always
+    ports:
+      - "139:139"
+      - "445:445"
+    volumes:
+      - /srv/samba/share:/share
+    cap_add:
+      - NET_BIND_SERVICE
+    command: [
+      "-u", "username;password",
+      "-s", "Public Share;/share;yes;no;no;all;none"
+    ]
+  cctv:
+    build: ./main
+    restart: always
+    volumes:
+      - .cam/config.json:/app/config.json
+      - /srv/samba/share:/app/records

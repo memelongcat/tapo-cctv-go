@@ -41,9 +41,9 @@
 				iptables -t nat -A POSTROUTING -o enp0s20u2 -j MASQUERADE
 				iptables -A FORWARD -i wlo1 -o eno1 -j ACCEPT
 				iptables -A FORWARD -i eno1 -o wlo1 -j ACCEPT
-				iptables -A FORWARD -i eno1 -j LOG --log-prefix "FORWARD eno1: "
-				iptables -A FORWARD -i wlo1 -j LOG --log-prefix "FORWARD wlo1: "
-				iptables -A FORWARD -o enp0s20u2 -j LOG --log-prefix "FORWARD to enp0s20u2: "
+#				iptables -A FORWARD -i eno1 -j LOG --log-prefix "FORWARD eno1: "
+#				iptables -A FORWARD -i wlo1 -j LOG --log-prefix "FORWARD wlo1: "
+#				iptables -A FORWARD -o enp0s20u2 -j LOG --log-prefix "FORWARD to enp0s20u2: "
 			'';
 		};
 		networkmanager.unmanaged = [ "wlo1" ];
