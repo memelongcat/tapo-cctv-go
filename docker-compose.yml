@@ -8,7 +8,7 @@ services:
     environment:
       - INTERFACE=wlo1
     volumes:
-      - .networking/hostapd.conf:/hostapd.conf
+      - ./networking/hostapd.conf:/hostapd.conf
     cap_add:
       - NET_ADMIN
   dnsmasq:
@@ -16,7 +16,7 @@ services:
     restart: always
     network_mode: "host"
     volumes:
-      - .networking/dnsmasq.conf:/etc/dnsmasq.conf
+      - ./networking/dnsmasq.conf:/etc/dnsmasq.conf
     ports: 
       - "53:53/udp"
       - "53:53/tcp"
@@ -41,5 +41,5 @@ services:
     build: .cam/main
     restart: always
     volumes:
-      - .cam/config.json:/app/config.json
+      - ./cam/config.json:/app/config.json
       - /srv/samba/share:/app/records
