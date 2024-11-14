@@ -48,18 +48,12 @@
 		};
 		networkmanager.unmanaged = [ "wlo1" ];
 	};
-#	security.wrappers = {
-#		rootlesskit = {
-#		owner = "root";
-#		group = "root";
-#		capabilities = "cap_net_bind_service+ep";
-#		source = "${pkgs.rootlesskit}/bin/rootlesskit";
-#		};
-#	};
-	environment.systemPackages = with pkgs; [
-    	libcap
-  	];
-	system.activationScripts.setDockerCap = ''
-    	${pkgs.libcap}/bin/setcap cap_net_bind_service=+ep ${pkgs.docker}/bin/dockerd
-  	'';
+	security.wrappers = {
+		rootlesskit = {
+		owner = "root";
+		group = "root";
+		capabilities = "cap_net_bind_service,cap_net_admin+ep";
+		source = "${pkgs.rootlesskit}/bin/rootlesskit";
+		};
+	};
 }
