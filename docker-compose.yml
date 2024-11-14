@@ -38,7 +38,7 @@ services:
       "-s", "Public Share;/share;yes;no;no;all;none"
     ]
   cctv:
-    build: ./main
+    build: .cam/main
     restart: always
     volumes:
       - .cam/config.json:/app/config.json
